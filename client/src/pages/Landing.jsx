@@ -1,4 +1,6 @@
 import React from 'react'
+import AppLayout from '../components/layout/AppLayout'
+
 
 const Landing = () => {
   return (
@@ -8,4 +10,4 @@ const Landing = () => {
   )
 }
 
-export default Landing
+export default AppLayout()(Landing)
