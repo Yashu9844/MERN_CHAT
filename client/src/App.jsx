@@ -1,5 +1,6 @@
 import React, { lazy } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import ProtectRoute from './components/styles/auth/ProtectRoute';
 
 const Landing = lazy(() => import("./pages/Landing"));
 
@@ -9,15 +10,27 @@ const Groups = lazy(() => import("./pages/Groups"));
 
 const Chat = lazy(() => import("./pages/Chat"));
 
+const NotFound = lazy(() => import("./pages/NotFound"))
+
+
+let user =true;
+
 
 const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/' element={<Landing />} />
-        <Route path='/chat/:chatId' element={<Chat />} />
+        <Route  element={<ProtectRoute user={user}/>}>
+        <Route path='/' element={<Landing/>} />
+         <Route path='/chat/:chatId' element={<Chat />} />
         <Route path='/groups' element={<Groups />} />
-        <Route path='/login' element={<Login/>} />
+       </Route>
+        <Route path='/login' element={<ProtectRoute user={!user} redirect='/'>
+          <Login/>
+        </ProtectRoute>} />
+
+ <Route path='*' element={<NotFound/>} />
+
       </Routes>
     </BrowserRouter>
   );

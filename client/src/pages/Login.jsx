@@ -2,8 +2,9 @@ import { Avatar, Button, Container, IconButton, Paper, Stack, TextField, Typogra
 import React, { useState } from 'react'
 import {CameraAlt} from '@mui/icons-material'
 import { VisuallyHiddenInput } from '../components/styles/StyledComponent'
-import {useInputValidation} from '6pp'
-
+import {useFileHandler, useInputValidation,useStrongPassword} from '6pp'
+import { usernameValidator } from '../utils/validators.js'
+import { useNavigate } from 'react-router-dom'
 
 const Login = () => {
   const [isLoggedIn,setIsLoggedIn] = useState(true)
@@ -14,9 +15,26 @@ const Login = () => {
 
   const name = useInputValidation("")
   const bio = useInputValidation("")
-  const username = useInputValidation("")
-  const password = useInputValidation("")
-  return <Container component={'main'} maxWidth='xs'
+  const username = useInputValidation("",usernameValidator)
+  const password = useStrongPassword("")
+  const avatar = useFileHandler("single")
+ const navigate = useNavigate()
+  const  handleLoginSubmit= async (e)=>{
+    e.preventDefault()
+
+  }
+
+  const handleSignUp = async(e)=>{
+    e.preventDefault()
+
+  }
+
+  return(
+ <div style={{
+  backgroundImage:"linear-gradient(rgb(255,255,209),rgb(249,159,159))",
+ }}>
+   
+   <Container component={'main'} maxWidth='xs'
   sx={{
     height: '100vh',
     width: '100%',
@@ -43,7 +61,8 @@ const Login = () => {
             Login
             <form style={{
               width:"100%",
-              marginTop:2            }} >
+              marginTop:2            }} 
+              onSubmit={handleLoginSubmit}>
                <TextField 
                required
                fullWidth
@@ -87,7 +106,7 @@ const Login = () => {
             Sign up
             <form style={{
               width:"100%",
-              marginTop:2            }} >
+              marginTop:2            }} onSubmit={handleSignUp}  >
                 
                <Stack position={"relative"} width={"10rem"} margin={'auto'}
               
@@ -95,7 +114,19 @@ const Login = () => {
               <Avatar sx={{
                 objectFit:'contain',
                 width:'10rem',
-                height:'10rem'              }}/>
+                height:'10rem'              }}
+                src={avatar.preview}/>
+               {
+                avatar.error && (
+                  <Typography color='error' variant='caption'>
+                    {avatar.error}
+                  </Typography>
+                )
+               }
+
+
+
+
                 <IconButton
                 sx={{
                   position:'absolute',
@@ -110,7 +141,7 @@ const Login = () => {
                 component='label'>
                   <>
                   <CameraAlt/>
-                  <VisuallyHiddenInput type='file'/>
+                  <VisuallyHiddenInput type='file' onChange={avatar.changeHandler}/>
                   </>
                 </IconButton>
 
@@ -136,7 +167,10 @@ const Login = () => {
                value={bio.value}
                onChange={bio.changeHandler}
                variant='outlined'
-              /> <TextField 
+              /> 
+              
+              
+              <TextField 
               required
               fullWidth
               label="Username"
@@ -145,6 +179,15 @@ const Login = () => {
               value={username.value}
               onChange={username.changeHandler}
              />  
+
+               {
+                username.error && (
+                  <Typography color='error' variant='caption'>
+                    {username.error}
+                  </Typography>
+                )
+               }
+
                <TextField 
                required
                fullWidth
@@ -155,6 +198,13 @@ const Login = () => {
                value={password.value}
                onChange={password.changeHandler}
               />   
+              {
+                password.error && (
+                  <Typography color='error' variant='caption'>
+                    {password.error}
+                  </Typography>
+                )
+               }
              <Button sx={{
                marginTop:2,
                width:'100%'
@@ -178,6 +228,7 @@ const Login = () => {
 
 
   </Container>
+ </div>)
   
 }
 
