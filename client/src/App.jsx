@@ -1,4 +1,4 @@
-import React, { lazy } from 'react';
+import React, { Suspense, lazy } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import ProtectRoute from './components/styles/auth/ProtectRoute';
 
@@ -19,7 +19,8 @@ let user =true;
 const App = () => {
   return (
     <BrowserRouter>
-      <Routes>
+     <Suspense fallback={<div>Loading...</div>}>
+     <Routes>
         <Route  element={<ProtectRoute user={user}/>}>
         <Route path='/' element={<Landing/>} />
          <Route path='/chat/:chatId' element={<Chat />} />
@@ -32,6 +33,7 @@ const App = () => {
  <Route path='*' element={<NotFound/>} />
 
       </Routes>
+     </Suspense>
     </BrowserRouter>
   );
 };
