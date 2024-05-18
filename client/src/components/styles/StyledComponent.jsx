@@ -1,4 +1,6 @@
 import { styled } from "@mui/material";
+import {Link as LinkComponent} from "@mui/material";
+
 
 export const VisuallyHiddenInput = styled("input")({
     border:0,
@@ -12,3 +14,10 @@ export const VisuallyHiddenInput = styled("input")({
     width:1,
     
 })
+
+export const Link = styled(LinkComponent)`
+    text-decoration:none;;
+    color:black;
+    &:hover{
+        background-Color:gray;
+    }`
