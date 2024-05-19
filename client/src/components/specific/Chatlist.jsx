@@ -7,37 +7,38 @@ const Chatlist = ({
     chats=[],
     chatId,
     onlineUsers=[],
-    newMessageAlerts=[{
+    newMessageAlert=[{
         chatId:"",
         count:0,
-    },],handleDeleteChatOpen =()=>{}}
-) => {
+    },], handleDeleteChat =()=>{}
+}) => {
   return (
    <Stack width={w} direction={"column"}>
     {
-        chats?.map((data,index)=>{
-         const {avatar, name,_id ,groupChat,members} =data ;
+        chats?.map((data, index) => {
+          const { avatar, name, _id, groupChat, members } = data;
 
-         const newMessageAlert =newMessageAlerts.find((chatId)=>chatId === _id)
+          const messageAlert = newMessageAlert.find(alert => alert.chatId === _id);
 
-         const isOnline = members?.some((members)=>onlineUsers.includes(_id))
-       
-        return (
-            <ChatItem newMessageAlert={newMessageAlert} isOnline={isOnline} avatar={avatar} 
-            name={name}     
-            index={index}
-            _id={_id}
-            Key={_id}
-            groupChat={groupChat}
-            sameSender={chatId === _id}
-            handleDeleteChatOpen={handleDeleteChatOpen}
-        
+          const isOnline = members?.some(member => onlineUsers.includes(member));
+
+          return (
+            <ChatItem
+              newMessageAlert={messageAlert}
+              isOnline={isOnline}
+              avatar={avatar}
+              name={name}
+              index={index}
+              _id={_id}
+              key={_id} 
+              groupChat={groupChat}
+              sameSender={chatId === _id}
+               handleDeleteChat={handleDeleteChat}
             />
-        )
+          );
         })
     }
-
    </Stack>
-  )
+  );
 }
-export default Chatlist
+export default Chatlist;
