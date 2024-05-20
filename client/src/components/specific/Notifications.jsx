@@ -1,6 +1,6 @@
-import { Avatar, Dialog, DialogTitle, IconButton, ListItem, Stack, Typography } from '@mui/material'
+import { Avatar, Button, Dialog, DialogTitle, IconButton, ListItem, Stack, Typography } from '@mui/material'
 import React, { memo } from 'react'
-import { Add as AddIcon } from '@mui/icons-material'
+
 import {sampleNotification} from '../constatns/sampleData.js'
 const Notifications = () => {
  const friendRequestHandler = ({_id,accept})=>{
@@ -33,6 +33,7 @@ const Notifications = () => {
   )
 }
 const NotificationItem = memo(({sender,_id,handler})=>{
+  const {name,avatar} = sender;
   return (
     <ListItem >
     <Stack direction={"row"} 
@@ -40,7 +41,7 @@ const NotificationItem = memo(({sender,_id,handler})=>{
             spacing={"1rem"}
             width={"100%"}>
        
-            <Avatar />
+            <Avatar  />
            
 
             <Typography
@@ -55,18 +56,18 @@ const NotificationItem = memo(({sender,_id,handler})=>{
             textOverflow: 'hidden', 
            width: '100%',                   }}
             
-            >{name}</Typography>
-        
-           <IconButton size='small'sx={{
-               bgcolor:'primary.main',
-               color:"white",
-               "&:hover":{
-                   bgcolor:'primary.dark',
-                   
-               }
-           }} onClick={()=>handler(_id)} disabled={handlerIsLoading}  >
-               <AddIcon/>
-            </IconButton>
+            >{`${name} sent you a friend request`}</Typography>
+          
+          <Stack direction={
+            {
+              xs:'column',
+              sm:'row'
+            }
+          }>
+            <Button onClick={()=>handler({_id,accept:true})} >Accept</Button>
+            <Button color='error' onClick={()=>handler({_id,accept:false})}>Reject</Button>
+          </Stack>
+           
    </Stack>  
 </ListItem>
   )
