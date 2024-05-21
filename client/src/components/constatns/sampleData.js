@@ -50,3 +50,21 @@ sender:{
     },
      _id:'7'
     }]
+
+
+    export const sampleMessage= [{
+        attachment:[
+            {
+                public_id:"123",
+                url:"https://res.cloudinary.com/yashwanth/image/upload/v1631691111/123.jpg"
+            }
+        ],
+        content:"NAMNDE MESASAGE IDHU",
+        _id:"super",
+        sender:{
+            _id:"user._id",
+            name:"Yashwanth",
+        },
+        chat:"ChatId",
+        createAt:"2024-02-12"
+    }]
