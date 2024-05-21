@@ -7,10 +7,15 @@ import { AttachFile as AttachFileIcon, Send as SendIcon } from "@mui/icons-mater
 import { InputBox } from "../components/styles/StyledComponent.jsx";
 import { orange } from "@mui/material/colors";
 import FileMenu from "../components/dialogs/FileMenu.jsx";
+import { sampleMessage } from "../components/constatns/sampleData.js";
+import MessageComponent from "../components/shared/MessageComponent.jsx";
 
 const Chat = () => {
     const containerRef = useRef(null);
-    const fileMenuRef = useRef(null);
+    const user={
+        _id:"asgdhbjwebrukhhgba",
+        name:"yashwanthRSiddesh"
+    }
     return (
         <>
             <Stack
@@ -24,8 +29,11 @@ const Chat = () => {
                     overflow: "hidden",
                     overflowY: "auto",
                 }}
-            >
-                {/* Content can go here */}
+            > {
+               sampleMessage.map((i)=>(
+                <MessageComponent message={i} user={user} />
+               ))
+            }
             </Stack>
             
             <form 
