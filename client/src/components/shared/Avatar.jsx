@@ -1,6 +1,7 @@
 import { AvatarGroup, Box, Stack } from '@mui/material'
 import React from 'react'
 import {Avatar as Ava} from '@mui/material'
+import { transeformImage } from '../../lib/features.js'
 const Avatar = ({
     avatar=[],max=4
 }) => {
@@ -11,7 +12,7 @@ const Avatar = ({
                 {avatar.map((i,index)=>(
                     <Ava
                     key={Math.random() * 100}
-                    src={i} 
+                    src={transeformImage(i)} 
                     alt={`Avatar ${index}`}
                     style={{
                         widthL:"3rem",

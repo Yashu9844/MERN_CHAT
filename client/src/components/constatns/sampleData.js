@@ -56,7 +56,7 @@ sender:{
         attachment:[
             {
                 public_id:"123",
-                url:"https://res.cloudinary.com/yashwanth/image/upload/v1631691111/123.jpg"
+                url:"https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.flaticon.com%2Ffree-icon%2Fuser-picture_21104&psig=AOvVaw08-DTYRfCflNEpMBhSC-nf&ust=1716663892137000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCNChz7f-poYDFQAAAAAdAAAAABAE"
             }
         ],
         content:"NAMNDE MESASAGE IDHU",
@@ -71,11 +71,11 @@ sender:{
         attachment:[
             {
                 public_id:"12333",
-                url:"https://res.cloudinary.com/yashwanth/image/upload/v1631691111/123.jpg"
+                url:"https://unsplash.com/photos/a-satellite-image-of-a-large-body-of-water-eAGoXRFiysw"
             }
         ],
         content:"NAMdalla MESASAGE IDHU",
-        _id:"super",
+        _id:"super1",
         sender:{
             _id:"asgdhbjwebrukhhgba",
             name:"Yashwanthee",

@@ -12,4 +12,6 @@ const fileFormat =(url = '')=>{
 
 }
 
-export {fileFormat}
+const transeformImage = (url = '',width=100)=> url;
+
+export {fileFormat,transeformImage}

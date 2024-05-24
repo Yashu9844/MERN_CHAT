@@ -3,6 +3,7 @@ import React, { memo } from 'react'
 import { lightBlue } from '../constatns/color';
 import moment from 'moment';
 import { fileFormat } from '../../lib/features.js';
+import RenderAttachment from './RenderAttachment.jsx';
 
 const MessageComponent = ({message,user}) => {
 const {sender,content,attachments=[],createdAt} = message
@@ -29,7 +30,7 @@ const timeAgo = moment(createdAt).fromNow()
            return (
             <Box key={index}><a href="" target='_blank' download style={{
               color:"black"
-            }}></a></Box>
+            }}>{RenderAttachment(file,url)}</a></Box>
            )
 })
       }
