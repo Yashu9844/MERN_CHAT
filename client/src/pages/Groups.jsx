@@ -22,8 +22,9 @@ import {
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Link } from "../components/styles/StyledComponent";
 
-import { sampleChats } from "../components/constatns/sampleData";
+import { sampleChats, sampleUsers } from "../components/constatns/sampleData";
 import AvatarCard1 from "../components/specific/AvatarCard1";
+import Useritem from "../components/shared/Useritem";
 const ConfirmDeleteDialog = lazy(()=>import("../components/dialogs/ConfirmDeleteDialog"))
  
 const AddMemberDialog  = lazy(()=>import("../components/dialogs/AddMemberDialog"))
@@ -40,8 +41,10 @@ const Groups = () => {
     
   
   useEffect(()=>{ 
-      setGroupName(`Group Name ${chatId} `);
+      if(chatId){
+        setGroupName(`Group Name ${chatId} `);
       setGroupNameUpdated(`Group Name 2 ${chatId} `)
+      }
 
       return ()=>{
          setGroupName("");
@@ -50,6 +53,11 @@ const Groups = () => {
       }
     },[chatId])
 
+
+ const  removeMemberHandler =(id)=>{
+    console.log("Removing",id)
+
+ }
 
 const handleDelete=()=>{
     console.log("delete")
@@ -191,13 +199,26 @@ const updateGroupName = ()=>{
                         md:"1rem 4rem",
                      }}
                      spacing={"2rem"}
-                     bgcolor={"bisque"}
+                 
                      height={"50vh"}
                      overflow={'auto'}
                      >
 
 
                       {/* members */}
+                      {
+                        sampleUsers.map((i)=>(
+                            <Useritem key={i._id}
+                            user={i}
+                            isAdded={true}
+                            styling={{
+                                boxShadow: "0 0 0.5rem rgba(0,0,0,0.2)",
+                                padding: "1rem 2rem",
+                                borderRadius: "1rem",
+                            }}
+                            handler={removeMemberHandler} />
+                        ))
+                      }
 
                      </Stack>
                     
@@ -223,9 +244,10 @@ const updateGroupName = ()=>{
                         xs: "none",
                         sm: "block",
                     },
+                    backgroundImage:"linear-gradient(rgb(255,255,209),rgb(249,159,159))"
                 }}
                 sm={4}
-                bgcolor={"bisque"}
+              
             >
                 <GroupLists myGroups={sampleChats} chatId={chatId} />
             </Grid>
@@ -282,7 +304,10 @@ const updateGroupName = ()=>{
 };
 
 const GroupLists = ({ width = "100%", myGroups = [], chatId }) => (
-    <Stack width={width}>
+    <Stack width={width} height={"100%"}
+    sx={{
+        overflow:"auto"
+    }}>
         {myGroups.length > 0 ? (
             myGroups.map((group) => (
                 <GroupListItem
@@ -309,6 +334,7 @@ const GroupListItem = memo(({ group, chatId }) => {
         >
             <Stack
                 direction={"row"}
+                width={"100%"}
                 spacing={"1rem"}
                 alignItems={"center"}
                 sx={{

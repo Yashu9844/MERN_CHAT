@@ -6,7 +6,9 @@ import { transeformImage } from '../../lib/features.js';
 const AvatarCard1 = ({ avatar = [], max = 4 }) => {
   return (
     <Stack direction="row" spacing={0.5}>
-      <AvatarGroup max={max}>
+      <AvatarGroup max={max} height={"100%"} sx={{
+        position:"relative"
+      }}>
         {avatar.map((i, index) => (
           <Ava
             key={index}
