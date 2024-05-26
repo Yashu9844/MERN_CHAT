@@ -83,7 +83,7 @@ const handleMobile = () => {
     setIsMobile((prev) => !prev);
 };
 
-const isAddmember = true;
+const isAddmember = false;
 
 const updateGroupName = ()=>{
   setIsEdit(false);
