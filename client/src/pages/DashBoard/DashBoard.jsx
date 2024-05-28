@@ -1,10 +1,11 @@
 import React from 'react'
+import AdminLayout from '../../components/layout/AdminLayout'
 
 const DashBoard = () => {
   return (
-    <div>
-      dashyyyy
-    </div>
+    <AdminLayout>
+       <div>DashBoared</div>
+    </AdminLayout>
   )
 }
 
