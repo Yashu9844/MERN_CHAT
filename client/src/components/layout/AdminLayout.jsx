@@ -1,7 +1,7 @@
 import { Box, Drawer, Grid, IconButton, Stack, Typography } from '@mui/material';
 import { Close as CloseIcon, Menu as MenuIcon } from '@mui/icons-material';
 import React, { useState } from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { Dashboard as DashBoardIcon, ManageAccounts as ManageAccountsIcon, Groups as GroupsIcon, Message as MessageIcon, ExitToApp as ExitToAppIcon } from '@mui/icons-material';
 import { Link } from '../styles/StyledComponent';
 
@@ -13,12 +13,12 @@ const adminTabs = [
   },
   {
     name: "Users",
-    path: "/admin/users-management", // Corrected the path typo
+    path: "/admin/users", // Corrected the path typo
     icon: <ManageAccountsIcon />
   },
   {
     name: "Chats",
-    path: "/admin/chats-management",
+    path: "/admin/chats",
     icon: <GroupsIcon />
   },
   {
@@ -69,16 +69,12 @@ const SideBar = ({ w = "100%" }) => {
   );
 };
 
-const isAdmin = false;
-
 const AdminLayout = ({ children }) => {
   const [isMobile, setIsMobile] = useState(false);
 
   const handleMobile = () => {
     setIsMobile(!isMobile);
   };
-
-  if(!isAdmin) return <Navigate to={"/admin"} />
 
   const handleClose = () => {
     setIsMobile(false);
