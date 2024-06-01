@@ -81,7 +81,15 @@ const DashBoard = () => {
     <AdminLayout>
       <Container component={"main"}>
         {Appbar}
-        <Stack direction={"row"} spacing={"2rem"} flexWrap={"wrap"}>
+        <Stack direction={{
+          xs: "column",
+          lg: "row"
+        }} flexWrap={"wrap"} justifyContent={"center"} alignItems={{
+          xs: "center",
+          lg: "stretch"
+        }} sx={{
+          gap:"2rem"
+        }}>
           <Paper
             elevation={3}
             sx={{
@@ -89,11 +97,11 @@ const DashBoard = () => {
               borderRadius: "1rem",
               width: "100%",
               maxWidth: "45rem",
-              height: "25rem"
+              
             }}
           >
             <Typography margin={"2rem 0"} variant='h4'>Last messages</Typography>
-            <LineCharts/>
+            <LineCharts value={[1,25,32,48,23,22,56]} />
           </Paper>
           <Paper
             elevation={3}
@@ -109,7 +117,7 @@ const DashBoard = () => {
               height: "25rem"
             }}
           >
-            <DoughnutCharts/>
+            <DoughnutCharts labels={["single Chats","Group Chats"]} value={[23,64]} />
             <Stack
               position="absolute"
               direction={"row"}
