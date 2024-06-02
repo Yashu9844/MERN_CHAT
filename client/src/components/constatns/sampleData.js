@@ -150,6 +150,47 @@ sender:{
               avatar: "https://www.w3schools.com/howto/img_avatar.png"
             }
           }
+        ],
+        messages:[
+          {
+            attachment:[
+              {
+                  public_id:"12333",
+                  url:"https://unsplash.com/photos/a-satellite-image-of-a-large-body-of-water-eAGoXRFiysw"
+              }
+          ],
+          content:"NAMdalla MESASAGE IDHU",
+          _id:"super1",
+          sender:{
+              _id:"asgdhbjwebrukhhgba",
+              name:"Yashwanthee",
+          },
+          chat:"ChatId",
+          groupChat:false,
+          createAt:"2024-02-12"
+      
+          },{
+            attachment:[
+              {
+                  public_id:"12",
+                  url:"https://unsplash.com/photos/a-satellite-image-of-a-large-body-of-water-eAGoXRFiysw"
+              }
+          ],
+          content:"NAMdalla sadasdasdMESASAGEasd IDHU",
+          _id:"super1",
+          sender:{
+              avatar:"https://unsplash.com/photos/a-satellite-image-of-a-large-body-of-water-eAGoXRFiysw",
+              name:"shambu",
+          },
+          chat:"ChatId",
+          groupChat:true,
+          createAt:"2024-02-12"
+          }
         ]
       };
-      
+      // export const sampleMessages = [{
+      //   attachment: [],
+      //    content:"kjsdhfk sdlfj ",
+      //    _id:"1",
+      //    name:"yashu"
+      // }]

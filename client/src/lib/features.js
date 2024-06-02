@@ -14,7 +14,7 @@ const fileFormat =(url = '')=>{
 
 }
 
-const transeformImage = (url = '',width=100)=> url;
+ const transeformImage = (url = '',width=100)=> url;
 
 const getLast7Days = ()=>{
  const currentDate = moment();
