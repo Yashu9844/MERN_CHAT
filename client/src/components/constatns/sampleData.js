@@ -85,3 +85,71 @@ sender:{
         chat:"ChatId",
         createAt:"2024-02-12"
     }]
+
+    export const dashboardData = {
+        users: [
+          {
+            name: "Yashwanth",
+            avatar: "https://www.w3schools.com/howto/img_avatar.png",
+            _id: "1",
+            username: "yashu",
+            friends: 20,
+            groups: 5,
+          },
+          {
+            name: "Shambu",
+            avatar: "https://www.w3schools.com/howto/img_avatar.png",
+            _id: "2",
+            username: "shambu",
+            friends: 20,
+            groups: 25,
+          }
+        ],
+        chats: [
+          {
+            name: "Group Chat 1",
+            avatar: ["https://www.w3schools.com/howto/img_avatar.png"],
+            _id: "1",
+            groupChat: false,
+            members: [
+              {
+                _id: "1",
+                avatar: "https://www.w3schools.com/howto/img_avatar.png"
+              },
+              {
+                _id: "2",
+                avatar: "https://www.w3schools.com/howto/img_avatar.png"
+              }
+            ],
+            totalMembers: 2,
+            totalMessages: 20,
+            creator: {
+              name: "Yashwanth",
+              avatar: "https://www.w3schools.com/howto/img_avatar.png"
+            }
+          },
+          {
+            name: "Group Chat 2",
+            avatar: ["https://www.w3schools.com/howto/img_avatar.png"],
+            _id: "2",
+            groupChat: false,
+            members: [
+              {
+                _id: "1",
+                avatar: "https://www.w3schools.com/howto/img_avatar.png"
+              },
+              {
+                _id: "2",
+                avatar: "https://www.w3schools.com/howto/img_avatar.png"
+              }
+            ],
+            totalMembers: 2,
+            totalMessages: 20,
+            creator: {
+              name: "Shambu",
+              avatar: "https://www.w3schools.com/howto/img_avatar.png"
+            }
+          }
+        ]
+      };
+      

@@ -1,12 +1,65 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
-import AdminLayout from '../../components/layout/AdminLayout'
+import Table from '../../components/shared/Table'
+import AdminLayout from '../../components/layout/AdminLayout';
+import { Avatar } from '@mui/material';
+import { dashboardData } from '../../components/constatns/sampleData';
+import { transeformImage } from '../../lib/features';
+
+const coloumns = [
+  {field:"id",
+  headerName:"ID",
+  headerClassName:"table-header",
+  width:200},
+  {field:"avatar",
+  headerName:"Avatar",
+  headerClassName:"table-header",
+  width:150,
+ renderCell: (params)=>(
+  <Avatar alt={params.row.name }  src={params.row.avatar} />
+ )
+},
+{
+  field:"name",
+  headerName:"Name",
+  headerClassName:"table-header",
+  width:200
+},
+{
+  field:"username",
+  headerName:"Username",
+  headerClassName:"table-header",
+  width:200
+},
+{
+  field:"friends",
+  headerName:"Friends",
+  headerClassName:"table-header",
+  width:150
+},
+{
+  field:"groups",
+  headerName:"Groups",
+  headerClassName:"table-header",
+  width:200
+},
+
+]
 
 const ManagmentUser = () => {
+  const [rows,setRows] = useState([]);
+
+useEffect(()=>{
+  setRows(dashboardData.users.map((i)=>({...i,id:i._id,avatar:transeformImage(i.avatar,50)})));
+},[])
+
+
   return (
-    <AdminLayout>
-      Users
-    </AdminLayout>
+   <AdminLayout>
+<Table heading={"All Users"} columns={coloumns} rows={rows} />
+
+  
+   </AdminLayout>
   )
 }
 
