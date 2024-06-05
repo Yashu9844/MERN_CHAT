@@ -8,10 +8,16 @@ export const newUser = async (req,res,next)=>{
         public_id:"Sdfiuhdh",
         url:"asdasd"
     }
- await User.create({name:"chaman",
-                    email:"chaman@gmail.com",
-                    password:"123",
-                    avatar:avatar
+
+  const {name,username,password,bio} = req.body;
+
+console.log(req.body)
+
+ await User.create({name:name,
+                    username:username,
+                    password:password,
+                    avatar:avatar,
+                    bio:bio
  })
 res.status(201).json({message:"USer created successfully"})
 }

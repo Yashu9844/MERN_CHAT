@@ -1,9 +1,10 @@
 import express from 'express';
-import { newUser, test } from '../controllers/user.controller.js';
+import { test ,newUser} from '../controllers/user.controller.js';
+import { multerUpload } from '../middlewares/multer.js';
 
 const router = express.Router();
 
 router.get('/',test);
-router.post('/', newUser)
+router.post('/new',multerUpload.single("avatar"), newUser)
 
 export default router;
