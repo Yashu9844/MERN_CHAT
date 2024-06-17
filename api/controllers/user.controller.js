@@ -30,7 +30,9 @@ export const newUser = async (req, res, next) => {
             bio
         });
 
-        sendToken(res,user,201,"User Created")
+        const {password:pass , ...rest} = user._doc;
+
+        sendToken(res,rest,201,"User Created")
 
         res.status(201).json({ message: "User created successfully", user });
 
@@ -40,10 +42,9 @@ export const newUser = async (req, res, next) => {
     }
 }
 
-export const logout = async (req, res, next) => {
 
-    
-}
+
+
 
 export const login = async (req, res, next) => {
 
@@ -71,4 +72,25 @@ export const login = async (req, res, next) => {
     
    }
 
+}
+export const getMyProfile =async (req,res, next) => {
+
+  const hellouser = await User.findOne(req.user);
+  console.log(hellouser)
+    res.status(200).json({
+        success:true,
+        user:req.user._id
+    })
+}
+export const logout =  (req, res, next) => {
+
+    try {
+        res.clearCookie('access_token').status(200  ).json("user succesfully Loged Out")
+    } catch (error) {
+        
+    }
+}
+
+export const searchUser = async (req, res, next) => {
+    
 }
