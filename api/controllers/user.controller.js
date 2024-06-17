@@ -62,7 +62,10 @@ export const login = async (req, res, next) => {
      if(!isMatch){
          return next(errorHandler(401,"Invalid password"))
      }
-   sendToken(res,user,200,`Welcome Back ${user.name} `)
+    
+     const {password:pass , ...rest} = user._doc;
+
+   sendToken(res,rest,200,`Welcome Back ${user.name} `)
    } catch (error) {
     next(error)
     

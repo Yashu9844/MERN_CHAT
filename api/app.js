@@ -2,6 +2,7 @@ import express from 'express';
 import userRoute from './routes/user.router.js'
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import { errorShow } from './utils/features.js';
 
 dotenv.config();
 
@@ -20,3 +21,5 @@ app.use('/user',userRoute)
 app.listen(port,()=>{
     console.log(`server is running on port ${port}`)
 })
+
+app.use(errorShow)
