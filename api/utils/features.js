@@ -30,5 +30,5 @@ export const errorShow = (err, req, res,next)=>{
    }
 
    export const emitEvent = (req,event,users,data)=>{
-         console("emiiting events",event)
+         console.log("emiiting events",event)
    }

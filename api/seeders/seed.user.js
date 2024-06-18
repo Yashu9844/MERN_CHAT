@@ -23,8 +23,7 @@ export const  createUser = async (numUsers)=>{
 
 
     } catch (error) {
-        console.error(error);
+        console.error(error); // Ensure `console.error
         process.exit(1);
-        
     }
 }
