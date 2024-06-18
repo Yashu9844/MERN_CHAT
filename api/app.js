@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import { errorShow } from './utils/features.js';
 import cookieParser from 'cookie-parser';
 import userChat from './routes/chat.route.js'
+import { createUser } from './seeders/seed.user.js';
 dotenv.config();
 
 const app = express();
@@ -16,6 +17,8 @@ mongoose.connect(process.env.MONGODB_CONNECT).then(()=>{
 }).catch(err=>{
     console.log(err);
 });
+
+// createUser(10)
 app.use(express.json());
 app.use(cookieParser())
 app.use('/user',userRoute)
