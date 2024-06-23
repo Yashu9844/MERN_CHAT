@@ -103,7 +103,7 @@ export const addMember = async (req, res, next) => {
      return next(errorHandler(404, "Chat not Found"));
     }
 
-    if (chat.creator.toString() !== chat.creator.toString()) {
+    if (chat.creator.toString() !== req.user._id.toString()) {
     return  next(errorHandler(403, "Your not Allowed to add membbers"));
     }
      
@@ -132,8 +132,6 @@ export const addMember = async (req, res, next) => {
   }
 };
 
-
-
 export const removeMembers = async (req, res, next) => {
   try{
     const {chatId , userId} = req.body
@@ -145,12 +143,15 @@ export const removeMembers = async (req, res, next) => {
     if (!chat) {
         return next(errorHandler(404, "Chat not Found"));
       }
+      if(!userThatIsRemoved) {
+        return next(errorHandler(404, "User not Found"));
+      }
       if (!chat.groupChat) {
        return next(errorHandler(404, "Chat not Found"));
       }
   
-      if (chat.creator.toString() !== chat.creator.toString()) {
-      return  next(errorHandler(403, "Your not Allowed to add membbers"));
+      if (chat.creator.toString() !== req.user._id.toString()) {
+      return  next(errorHandler(403, "Your not Allowed to remove members"));
       }
 if(chat.members.length  <= 3){
     return next(errorHandler(400, "Group Members limit must be 3 Members"))
@@ -179,3 +180,14 @@ res.status(200).json({
     next(error);
   }
 };
+
+
+export const leaveGroup = async(req,res,next)=>{
+    try {
+        const chatId = req.params.chat;
+        
+        
+    } catch (error) {
+        
+    }
+}
