@@ -9,6 +9,6 @@ router.get("/my",verifyToken,getMyChats)
 router.get("/my/groups",verifyToken,getMyGroups)
 router.put("/addMembers",verifyToken,addMember)
 router.put("/removeMembers",verifyToken,removeMembers)
-router.delete('/leave/:id',leaveGroup)
+router.delete('/leave/:id',verifyToken,leaveGroup)
 
 export default router
