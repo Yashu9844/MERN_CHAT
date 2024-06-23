@@ -40,8 +40,16 @@ export const getMyChats = async (req, res, next) => {
                 groupChat,
                 avatar: groupChat ? members.slice(0, 3).map(({ avatar }) => avatar.url) : [otherMember.avatar.url],
                 name: groupChat ? name : otherMember.name,
-                members,
+                members:members.reduce((prev,curr)=>{
+
+                    if(curr._id.toString() !== req.user.toString()){
+                        prev.push(curr._id)
+                    }
+                    return prev;
+                },[]),
             };
+
+           
         });
 
         res.status(200).json({
@@ -52,3 +60,29 @@ export const getMyChats = async (req, res, next) => {
         next(error);
     }
 };
+
+
+export const getMyGroups = async (req, res,next) => {
+    try {
+        const chats = await Chat.find({
+            members: req.user,
+            groupChat: true,
+            creator: req.user,
+        }).populate("members", "name avatar");
+
+        const groups = chats.map(({ members, _id, groupChat, name }) => ({
+            _id,
+            groupChat,
+            name,
+            avatar: members.slice(0, 3).map(({ avatar }) => avatar.url),
+        }));
+
+        res.status(200).json({
+            success: true,
+            groups,
+        });
+    } catch (error) {
+        next(error);
+        
+    }
+}
