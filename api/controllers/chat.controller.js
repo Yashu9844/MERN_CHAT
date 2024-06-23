@@ -95,7 +95,7 @@ export const addMember = async (req, res, next) => {
   
     if(!members || members.length < 1) { return next(errorHandler(400,"Please Provide Mmembers"))}
     const chat = await Chat.findById(chatId);
-
+      
     if (!chat) {
       return next(errorHandler(404, "Chat not Found"));
     }
@@ -108,11 +108,13 @@ export const addMember = async (req, res, next) => {
     }
      
     const allNewMembersPromises = members.map((i) => User.findById(i, "name"));
-
+  
 
     const allMembers = await Promise.all(allNewMembersPromises);
+          
+    const uniqueMembers = allMembers.filter((i)=> !chat.members.includes(i._id.toString()))
 
-    chat.members.push(...allMembers.map((i)=>i._id));
+    chat.members.push(...uniqueMembers.map((i)=>i._id));
     if(chat.members.length > 100) { return next(errorHandler(400, "Group Members limit reached"))}
 
     await chat.save();
@@ -126,6 +128,54 @@ export const addMember = async (req, res, next) => {
     })
 
 } catch (error) {
+    next(error);
+  }
+};
+
+
+
+export const removeMembers = async (req, res, next) => {
+  try{
+    const {chatId , userId} = req.body
+
+    const [chat , userThatIsRemoved] = await Promise.all([
+        Chat.findById(chatId),
+        User.findById(userId)
+    ])
+    if (!chat) {
+        return next(errorHandler(404, "Chat not Found"));
+      }
+      if (!chat.groupChat) {
+       return next(errorHandler(404, "Chat not Found"));
+      }
+  
+      if (chat.creator.toString() !== chat.creator.toString()) {
+      return  next(errorHandler(403, "Your not Allowed to add membbers"));
+      }
+if(chat.members.length  <= 3){
+    return next(errorHandler(400, "Group Members limit must be 3 Members"))
+}
+ const groupMembers = chat.members;
+
+  const AfterDeleteMembers = groupMembers.filter((member)=> member.toString() !== userId.toString())
+  
+chat.members = AfterDeleteMembers;
+
+await chat.save();
+
+emitEvent(req,ALERT,chat.members,`${userThatIsRemoved.name} has been removed from ${chat.name} group by ${req.user.name}`)
+emitEvent(req,REFETCH_CHATS,chat.members);
+
+res.status(200).json({
+    success:true,
+    message:'User Succesfully Deleted'
+})
+
+
+
+
+  
+  } catch (error) {
     next(error);
   }
 };
