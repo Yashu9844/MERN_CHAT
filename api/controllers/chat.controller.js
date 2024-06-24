@@ -317,3 +317,38 @@ export const getChatDetails =async (req, res,next) =>{
     
   }
 }
+
+
+export const renameGroup = async (req,res,next) => {
+  try {
+
+    const chatId = req.params.id;
+    const {name} = req.body;
+
+    const chat = await Chat.findById(chatId);
+    if(!chat){
+      return next(errorHandler(404,"Chat not Found"));
+    }
+         
+    if(!chat.groupChat){
+      return next(errorHandler(400,"This is not a group chat"));
+    }
+
+    if(chat.creator.toString()!== req.user._id.toString()){
+      return next(errorHandler(403,"You are not allowed to rename this group"));
+    }
+    chat.name = name;
+    await chat.save();
+    emitEvent(req,ALERT,chat.members,`${req.user.name} has renamed the group to ${name}`)
+    emitEvent(req,REFETCH_CHATS,chat.members)
+    res.status(200).json({
+      success:true,
+      message:"Group renamed successfully"
+    })
+   
+    
+
+  } catch (error) {
+    next(error);
+  }
+}
