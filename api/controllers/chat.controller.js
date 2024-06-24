@@ -283,3 +283,37 @@ emitEvent(req,NEW_MESSAGE_ALERT,chats.members,{chatId})
     
   }
 }
+
+export const getChatDetails =async (req, res,next) =>{
+  try {
+    if(req.query.populate === 'true'){
+      
+    const chat = await Chat.findById(req.params.id).populate('members','name avatar').lean() // lean only changes the object of js and not db
+    if(!chat){
+      return next(errorHandler(404,"Chat not Found"))
+    }
+    chat.members = chat.members.map(({_id,name,avatar})=>({
+      _id,name,
+      avatar:avatar.url
+    }))
+    return res.status(200).json({
+        success:true,
+        chat
+      })
+    }else{
+      const chat = await Chat.findById(req.params.id);
+      if(!chat){
+        return next(errorHandler(404,"Chat not Found"));
+      }
+  
+      res.status(200).json({
+        success:true,
+        chat
+      })
+    }
+  } catch (error) {
+
+    next(error)
+    
+  }
+}
