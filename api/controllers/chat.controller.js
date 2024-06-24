@@ -1,6 +1,7 @@
-import { ALERT, REFETCH_CHATS } from "../constants/events.js";
+import { ALERT, NEW_ATTACHMENT, NEW_MESSAGE_ALERT, REFETCH_CHATS } from "../constants/events.js";
 import { getOtherMember } from "../lib/helper.js";
 import { Chat } from "../models/chat.model.js";
+import { Message } from "../models/message.model.js";
 import { User } from "../models/user.modedl.js";
 import { errorHandler } from "../utils/error.js";
 import { emitEvent } from "../utils/features.js";
@@ -230,3 +231,55 @@ export const leaveGroup = async (req, res, next) => {
   }
 };
 
+export const sendAttachment = async (req,res,next)=>{
+
+  try {
+
+   const { chatId} = req.body
+
+
+   const [chats,me] = await Promise.all([
+    Chat.findById(chatId),
+    User.findById(req.user,"name"),
+   ])
+   if(!chats) {
+    return next(errorHandler(404,"Chat not Found!!"))
+   }
+
+
+   const files = req.files || []
+
+   const attachments =[]  //upload files
+
+
+   if(files.length < 1){
+    return next(errorHandler(400,"Please attach a file"));
+   }
+   const messageForDB = {content:"",attachments,sender:me._id,chat:chatId}
+  const messageForRealTime = {...messageForDB,sender:{
+      _id:me._id,
+      name:me.name,
+      
+    },
+    chat:chatId,
+  } // Socket se bejana chahiyee
+
+
+ 
+  const message = await Message.create(messageForDB)
+ 
+  emitEvent(req,NEW_ATTACHMENT,chats.members,{
+    message:messageForRealTime,
+   chatId
+  })
+emitEvent(req,NEW_MESSAGE_ALERT,chats.members,{chatId})
+    return res.status(200).json({
+      success: true,
+      message,
+    })
+    
+  } catch (error) {
+    next(error);
+    
+  }
+}
