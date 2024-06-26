@@ -366,6 +366,9 @@ export const deleteChat = async (req,res,next) => {
     if(!chat.groupChat){
       return next(errorHandler(400,"This is not a group chat"));
     }
+    if (!req.user || !req.user._id) {
+      return next(errorHandler(401, "User is not authenticated"));
+    }
 
     if(chat.groupChat && chat.creator.toString()!== req.user._id.toString()){
       return next(errorHandler(403,"You are not allowed to rename this group"));
