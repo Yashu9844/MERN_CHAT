@@ -1,5 +1,5 @@
 import express from 'express';
-import { addMember, deleteChat, getChatDetails, getMyChats, getMyGroups, leaveGroup, newGroupChat, removeMembers, renameGroup, sendAttachment } from '../controllers/chat.controller.js';
+import { addMember, deleteChat, getChatDetails, getMessages, getMyChats, getMyGroups, leaveGroup, newGroupChat, removeMembers, renameGroup, sendAttachment } from '../controllers/chat.controller.js';
 import { verifyToken } from '../utils/verifyUser.js';
 import { attachmentsMulter } from '../middlewares/multer.js';
 
@@ -12,5 +12,6 @@ router.put("/addMembers",verifyToken,addMember)
 router.put("/removeMembers",verifyToken,removeMembers)
 router.delete('/leave/:id',verifyToken,leaveGroup)
 router.post('/message',verifyToken,attachmentsMulter,sendAttachment)
+router.post('/message/:id',verifyToken,getMessages)
 router.route('/:id').get(getChatDetails).put(verifyToken,renameGroup).delete(verifyToken,deleteChat)
 export default router

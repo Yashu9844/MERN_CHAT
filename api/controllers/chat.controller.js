@@ -405,3 +405,35 @@ export const deleteChat = async (req,res,next) => {
     next(error);
   }
 }
+
+export const getMessages = async (req, res) => {
+  try {
+
+    const chatId = req.params.id;
+    const chat = await Chat.findById(chatId);
+    const {page = 1,} = req.query;
+    const limit = 20;
+    if (!chat) {
+      return next(errorHandler(404, "Chat not Found"));
+    }
+    const [messages,totalMessageCount] = await Promise.all([Message.find({ chat: chatId })
+     .populate("sender", "name ")
+     .sort({ createdAt: -1 })
+     .limit(limit)
+     .skip((page - 1) * limit)
+     .lean(),
+    Message.countDocuments({chat:chatId}) ])
+
+   const totalPages = Math.ceil(totalMessageCount/limit)
+
+    res.status(200).json({
+      success: true,
+      messages,
+      totalPages
+    });
+    
+  } catch (error) {
+    next(error);
+    
+  }
+}
