@@ -30,15 +30,15 @@ export const  createUser = async (numUsers)=>{
     }
 }
 
-export const createSampleChat =async (numChats)=>{
+export const createSampleChat = async (numChats)=>{
 
     try {
         const users = await User.find().select("_id");
     
         const chatPromises =[];
     
-      for(i=0;i<users.length;i++){
-        for(j=i+1;j<users.length;j++){
+      for(let i=0;i<users.length;i++){
+        for(let j=i+1;j<users.length;j++){
             chatPromises.push(
                 Chat.create({
                     name:faker.lorem.word(2),
@@ -58,65 +58,97 @@ export const createSampleChat =async (numChats)=>{
 
 }
 
-export const createGroupChat = async (numChats)=>{
+export const createGroupChat = async (numChats) => {
     try {
         const users = await User.find().select("_id");
     
-        const chatPromises =[];
+        const chatPromises = [];
     
-      for(i=0;i<users.length;i++){
-        const numsMembers = simpleFaker.number.int({min:3,max:users.length});
-      }const membbers = [];
-
-
-       for(let i=0;i<numsMembers.length;i++){
-     const reandomIndex = Math.flooe(Math.random() * users.length)   
-    const randomUser = users[reandomIndex];
-
-    if(!members.includes(randomUser)){
-        members.push(randomUser);
-    }
-    }
-
-    const chat = Chat.create({
-        groupChat:true,
-        name:faker.lorem.word(2),
-        members:members,
-        creator:members[0]
-
-    })
-
+        for (let i = 0; i < numChats; i++) {
+            const numMembers = simpleFaker.number.int({ min: 3, max: users.length });
+            const members = [];
+    
+            while (members.length < numMembers) {
+                const randomIndex = Math.floor(Math.random() * users.length);
+                const randomUser = users[randomIndex];
+    
+                if (!members.includes(randomUser)) {
+                    members.push(randomUser);
+                }
+            }
+    
+            const chat = Chat.create({
+                groupChat: true,
+                name: faker.lorem.words(2),
+                members: members,
+                creator: members[0]
+            });
+    
+            chatPromises.push(chat);
+        }
+    
+        await Promise.all(chatPromises);
+        process.exit();
         
     } catch (error) {
-        console.log(error)
+        console.error(error);
+        process.exit(1);
     }
-}
+};
 
-export const createMessage = async (numMessages)=>{
+export const createMessage = async (numMessages) => {
     try {
         const users = await User.find().select("_id");
         const chats = await Chat.find().select("_id");
-        
-       const messagePromise = [];
 
-       for(let i=0;i<numMessages;i++){
-        const randomUser = users[Math.floor(Math.random() * users.length)];
-        const randomChat = chats[Math.floor(Math.random() * chats.length)];
-       }
+        const messagePromises = [];
 
-       messagePromise.push(
-        Message.create({
-            chat:randomChat,
-            sender:randomUser,
-            content:faker.lorem.sentence(10),
-        })
-       )
+        for (let i = 0; i < numMessages; i++) {
+            const randomUser = users[Math.floor(Math.random() * users.length)];
+            const randomChat = chats[Math.floor(Math.random() * chats.length)];
 
+            messagePromises.push(
+                Message.create({
+                    chat: randomChat._id,
+                    sender: randomUser._id,
+                    content: faker.lorem.sentence(10),
+                })
+            );
+        }
 
-  await Promise.all(messagePromise)
-  console.log("messages created",numMessages);
-  process.exit()
+        await Promise.all(messagePromises);
+        console.log("Messages created:", numMessages);
+        process.exit();
     } catch (error) {
-        console.log(error)
+        console.log(error);
+    }
+};
+export const createMessageInChat = async (chatId, numMessages) => {
+    try {
+        const users = await User.find().select("_id");
+
+        const messagePromises = [];
+
+        for (let i = 0; i < numMessages; i++) {
+            const randomUser = users[Math.floor(Math.random() * users.length)];
+
+            messagePromises.push(
+                Message.create({
+                    chat: chatId,
+                    sender: randomUser._id,
+                    content: faker.lorem.sentence(),
+                })
+            );
+        }
+
+        await Promise.all(messagePromises);
+        console.log("Messages created in chat:", chatId);
+        process.exit();
+        
+    } catch (error) {
+        console.error(error);
+        process.exit(1);
     }
 }
+
+

@@ -12,6 +12,6 @@ router.put("/addMembers",verifyToken,addMember)
 router.put("/removeMembers",verifyToken,removeMembers)
 router.delete('/leave/:id',verifyToken,leaveGroup)
 router.post('/message',verifyToken,attachmentsMulter,sendAttachment)
-router.post('/message/:id',verifyToken,getMessages)
+router.get('/message/:id',verifyToken,getMessages)
 router.route('/:id').get(getChatDetails).put(verifyToken,renameGroup).delete(verifyToken,deleteChat)
 export default router

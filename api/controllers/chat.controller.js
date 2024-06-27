@@ -406,7 +406,7 @@ export const deleteChat = async (req,res,next) => {
   }
 }
 
-export const getMessages = async (req, res) => {
+export const getMessages = async (req, res,next) => {
   try {
 
     const chatId = req.params.id;
