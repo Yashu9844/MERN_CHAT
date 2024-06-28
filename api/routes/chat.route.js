@@ -2,7 +2,7 @@ import express from 'express';
 import { addMember, deleteChat, getChatDetails, getMessages, getMyChats, getMyGroups, leaveGroup, newGroupChat, removeMembers, renameGroup, sendAttachment } from '../controllers/chat.controller.js';
 import { verifyToken } from '../utils/verifyUser.js';
 import { attachmentsMulter, singleAvatar } from '../middlewares/multer.js';
-import { addMemberValidator, getChatDetailsValidator, getMessagesValidator, leaveGroupValidator, newGroupChatValidator, removeMembersValidator, sendAttachmentValidator, validateHandler } from '../lib/validator.js';
+import { addMemberValidator, getChatDetailsValidator, getMessagesValidator, leaveGroupValidator, newGroupChatValidator, removeMembersValidator, renameGroupValidator, sendAttachmentValidator, validateHandler } from '../lib/validator.js';
 
 
 const router = express.Router();
@@ -15,5 +15,5 @@ router.put("/removeMembers",removeMembersValidator(),validateHandler,verifyToken
 router.delete('/leave/:id',leaveGroupValidator(),validateHandler,verifyToken,leaveGroup)
 router.post('/message',sendAttachmentValidator(),validateHandler,verifyToken,attachmentsMulter,sendAttachment)
 router.get('/message/:id',getMessagesValidator(),validateHandler,verifyToken,getMessages)
-router.route('/:id').get(getChatDetailsValidator(),validateHandler,getChatDetails).put(verifyToken,renameGroup).delete(verifyToken,deleteChat)
+router.route('/:id').get(getChatDetailsValidator(),validateHandler,getChatDetails).put(renameGroupValidator(),validateHandler,verifyToken,renameGroup).delete(getChatDetailsValidator(),validateHandler,verifyToken,deleteChat)
 export default router

@@ -72,6 +72,12 @@ export const getChatDetailsValidator = ()=>[
     // query('page').notEmpty()
    
 ]
+export const renameGroupValidator = ()=>[
+    param("id","Please enter a Chat ID").notEmpty(),
+    body("name","Please enter a new name").notEmpty(),
+   
+   
+]
 
 
 
