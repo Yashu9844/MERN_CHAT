@@ -1,5 +1,5 @@
 import express from 'express';
-import { test, newUser, logout, login, getMyProfile, searchUser, sendRequest, acceptRequest } from '../controllers/user.controller.js';
+import { test, newUser, logout, login, getMyProfile, searchUser, sendRequest, acceptRequest, getAllNotifications } from '../controllers/user.controller.js';
 import { multerUpload } from '../middlewares/multer.js';
 import { verifyToken } from '../utils/verifyUser.js';
 import { acceptRequestValidator, loginValidator, registerValidator, sendRequestValidator, validateHandler } from '../lib/validator.js';
@@ -15,5 +15,6 @@ router.get('/me',verifyToken,getMyProfile);
 router.get('/search',verifyToken, searchUser);
 router.put('/send',sendRequestValidator(),validateHandler,verifyToken,sendRequest)
 router.put('/accept',acceptRequestValidator(),validateHandler,verifyToken,acceptRequest)
+router.get('/notifications',verifyToken,getAllNotifications)
 
 export default router;

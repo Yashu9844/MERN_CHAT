@@ -194,3 +194,28 @@ export const acceptRequest = async (req,res,next)=>{
         next(error);
     }
 }
+
+export const getAllNotifications = async (req,res,next )=>{
+    try {
+        const requests = await Request.find({ receiver:req.user}).populate("sender","name avatar");
+
+        const allRequests = requests.map(({_id,sender}) =>(
+            {
+                _id,
+                sender:{
+                    _id:sender._id,
+                    name:sender.name,
+                    avatar:sender.avatar.url
+                }
+            }
+        ))
+                  res.status(200).json({
+                    success:true,
+                 allRequests
+                  })                                                   
+
+        
+    } catch (error) {
+        next(error)
+    }
+}
