@@ -76,9 +76,12 @@ export const renameGroupValidator = ()=>[
 ]
 export const sendRequestValidator = ()=>[
     body("userId","Please enter a userId").notEmpty(),
-   
-   
-   
+    
+]
+export const acceptRequestValidator = ()=>[
+    body("requestId","Please enter a requestId").notEmpty(),
+    body("accept","Please add accept").notEmpty().withMessage("Accept is Boolean").isBoolean().withMessage("Accept is Boolean"),
+    
 ]
 
 

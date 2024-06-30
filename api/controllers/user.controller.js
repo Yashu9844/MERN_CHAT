@@ -4,7 +4,7 @@ import { errorHandler } from "../utils/error.js";
 import { emitEvent, sendToken } from "../utils/features.js";
 import { Chat } from "../models/chat.model.js";
 import { Request } from "../models/request.model.js";
-import { NEW_REQUEST } from "../constants/events.js";
+import { NEW_REQUEST, REFETCH_CHATS } from "../constants/events.js";
 
 export const test = (req, res, next) => {
     res.send("hello world");
@@ -155,4 +155,42 @@ export const sendRequest = async (req,res,next)=>{
 
 }
 
-export const 
+export const acceptRequest = async (req,res,next)=>{
+    try {
+
+        const {requestId , accept} = req.body;
+
+        const request = await Request.findOne(requestId).populate("sender","name").populate("receiver","name");
+
+        if(!request ) return next(errorHandler(404,"Request not found"));
+
+        if(request.receiver.toString()!== req.user.toString()){
+            return next(errorHandler(401,"Unauthorized"));
+        }
+        if(!accept){
+            await request.deleteOne();
+            return res.status(200).json({
+                success:true,
+                message:"Request rejected"
+            })
+
+            const members = [request.sender._id,request.receiver._id,];
+
+            await Promise.all([
+                Chat.create({
+                    members,
+                    name:`${request.sender.name}-${request.receiver.name}`,
+                }
+                ),request.deleteOne()
+            ])
+            emitEvent(req,REFETCH_CHATS,members,"Chat Created")
+           return res.status(200).json({
+            success:true,
+                message:"Request accepted",
+               senderID:request.sender._id
+           })
+        }
+    } catch (error) {
+        next(error);
+    }
+}
