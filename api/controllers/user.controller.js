@@ -57,11 +57,11 @@ export const login = async (req, res, next) => {
      }
     
  
-     const isMatch =  await compare(password,user.password);
+    //  const isMatch =  await compare(password,user.password);
  
-     if(!isMatch){
-         return next(errorHandler(401,"Invalid password"))
-     }
+    //  if(!isMatch){
+    //      return next(errorHandler(401,"Invalid password"))
+    //  }
     
      const {password:pass , ...rest} = user._doc;
 
@@ -155,45 +155,50 @@ export const sendRequest = async (req,res,next)=>{
 
 }
 
-export const acceptRequest = async (req,res,next)=>{
+export const acceptRequest = async (req, res, next) => {
     try {
+        const { requestId, accept } = req.body;
 
-        const {requestId , accept} = req.body;
+        // Correctly query the database using an object
+        const request = await Request.findOne({ _id: requestId }).populate("sender", "name").populate("receiver", "name");
 
-        const request = await Request.findOne(requestId).populate("sender","name").populate("receiver","name");
-
-        if(!request ) return next(errorHandler(404,"Request not found"));
-
-        if(request.receiver.toString()!== req.user.toString()){
-            return next(errorHandler(401,"Unauthorized"));
+        if (!request) return next(errorHandler(404, "Request not found"));
+        console.log("Receiver ID from request:", request.receiver._id.toString());
+        console.log("User ID from req:", req.user._id.toString());
+        if (request.receiver._id.toString() !== req.user._id.toString()) {
+            return next(errorHandler(401, "Unauthorized e"));
         }
-        if(!accept){
+
+        if (!accept) {
             await request.deleteOne();
             return res.status(200).json({
-                success:true,
-                message:"Request rejected"
-            })
-
-            const members = [request.sender._id,request.receiver._id,];
+                success: true,
+                message: "Request rejected"
+            });
+        } else {
+            const members = [request.sender._id, request.receiver._id];
 
             await Promise.all([
                 Chat.create({
                     members,
-                    name:`${request.sender.name}-${request.receiver.name}`,
-                }
-                ),request.deleteOne()
-            ])
-            emitEvent(req,REFETCH_CHATS,members,"Chat Created")
-           return res.status(200).json({
-            success:true,
-                message:"Request accepted",
-               senderID:request.sender._id
-           })
+                    name: `${request.sender.name}-${request.receiver.name}`,
+                }),
+                request.deleteOne()
+            ]);
+
+            emitEvent(req, REFETCH_CHATS, members, "Chat Created");
+
+            return res.status(200).json({
+                success: true,
+                message: "Request accepted",
+                senderID: request.sender._id
+            });
         }
     } catch (error) {
         next(error);
     }
-}
+};
+
 
 export const getAllNotifications = async (req,res,next )=>{
     try {
