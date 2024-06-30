@@ -5,6 +5,7 @@ import { emitEvent, sendToken } from "../utils/features.js";
 import { Chat } from "../models/chat.model.js";
 import { Request } from "../models/request.model.js";
 import { NEW_REQUEST, REFETCH_CHATS } from "../constants/events.js";
+import { getOtherMember } from "../lib/helper.js";
 
 export const test = (req, res, next) => {
     res.send("hello world");
@@ -218,6 +219,42 @@ export const getAllNotifications = async (req,res,next )=>{
                     success:true,
                  allRequests
                   })                                                   
+
+        
+    } catch (error) {
+        next(error)
+    }
+}
+
+
+export const getMyFriends = async (req,res,next)=>{
+    try {
+        const chatId = req.query.chatId;
+
+        const chats  = await Chat.find({
+            members: req.user,
+            groupChat:false
+        }).populate("members","name avatar")
+
+        const friends = chats.map(({members})=>{
+            const otherUser = getOtherMember(members,req.user);
+
+            return {
+                _id:otherUser._id,
+                name:otherUser.name,
+                avatar:otherUser.avatar.url
+            }
+        })
+
+        if(chatId){
+            const chat = await Chat.findById(chatId);
+            const availableFriends = friends.filter((friend)=>!chat.members.includes(friend._id))
+        }
+
+        return res.status(200).json({
+            success:true,
+            friends:availableFriends
+        })
 
         
     } catch (error) {
