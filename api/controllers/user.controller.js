@@ -57,11 +57,11 @@ export const login = async (req, res, next) => {
      }
     
  
-    //  const isMatch =  await compare(password,user.password);
+     const isMatch =  await compare(password,user.password);
  
-    //  if(!isMatch){
-    //      return next(errorHandler(401,"Invalid password"))
-    //  }
+     if(!isMatch){
+         return next(errorHandler(401,"Invalid password"))
+     }
     
      const {password:pass , ...rest} = user._doc;
 
@@ -163,8 +163,8 @@ export const acceptRequest = async (req, res, next) => {
         const request = await Request.findOne({ _id: requestId }).populate("sender", "name").populate("receiver", "name");
 
         if (!request) return next(errorHandler(404, "Request not found"));
-        console.log("Receiver ID from request:", request.receiver._id.toString());
-        console.log("User ID from req:", req.user._id.toString());
+        // console.log("Receiver ID from request:", request.receiver._id.toString());
+        // console.log("User ID from req:", req.user._id.toString());
         if (request.receiver._id.toString() !== req.user._id.toString()) {
             return next(errorHandler(401, "Unauthorized e"));
         }
