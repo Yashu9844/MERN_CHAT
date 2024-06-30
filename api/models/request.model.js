@@ -1,5 +1,5 @@
 import { Schema,Types,model } from "mongoose";
-import { type } from "os";
+
 
 
 const requestSchema=new Schema({
@@ -19,8 +19,6 @@ sender:{
            required:true
           },
    
- 
-
 },{
     timestamps:true
 })

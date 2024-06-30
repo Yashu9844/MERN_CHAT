@@ -15,12 +15,8 @@ const registerValidator = ()=>[
     ]
 
 export const validateHandler = (req,res,next) =>{
-
     const errors = validationResult(req);
-
     const errorMessages = errors.array().map((error)=>error.msg).join(",");
-
-  
 
     if(errors.isEmpty()) return next();
     else next(errorHandler(400,errorMessages))
@@ -75,6 +71,12 @@ export const getChatDetailsValidator = ()=>[
 export const renameGroupValidator = ()=>[
     param("id","Please enter a Chat ID").notEmpty(),
     body("name","Please enter a new name").notEmpty(),
+   
+   
+]
+export const sendRequestValidator = ()=>[
+    body("userId","Please enter a userId").notEmpty(),
+   
    
    
 ]

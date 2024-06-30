@@ -1,8 +1,10 @@
 import { compare } from "bcrypt";
 import { User } from "../models/user.modedl.js"; // Fix the typo in the import path
 import { errorHandler } from "../utils/error.js";
-import { sendToken } from "../utils/features.js";
+import { emitEvent, sendToken } from "../utils/features.js";
 import { Chat } from "../models/chat.model.js";
+import { Request } from "../models/request.model.js";
+import { NEW_REQUEST } from "../constants/events.js";
 
 export const test = (req, res, next) => {
     res.send("hello world");
@@ -42,10 +44,6 @@ export const newUser = async (req, res, next) => {
         next(errorHandler(500,'User cant signup'))
     }
 }
-
-
-
-
 
 export const login = async (req, res, next) => {
 
@@ -121,3 +119,40 @@ export const searchUser = async (req, res, next) => {
         users
     })
 }
+
+export const sendRequest = async (req,res,next)=>{
+
+    const {userId } = req.body;
+
+    try {
+  const request = await Request.findOne({
+    $or:[
+        {sender:req.user,receiver:userId},
+        {sender:userId,receiver:req.user}
+  
+    ],
+  })
+
+  if(request) return next(errorHandler(400,"Already request sent"))
+
+    await Request.create({
+        sender:req.user,
+        receiver:userId
+    })
+  emitEvent(req,NEW_REQUEST,[userId],"Request sent")
+        
+ res.status(200).json({
+        success:true,
+        message:"Request sent successfully"
+    })
+
+        
+    } catch (error) {
+    next(error);       
+    }
+
+
+
+}
+
+export const 
