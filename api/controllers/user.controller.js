@@ -2,6 +2,7 @@ import { compare } from "bcrypt";
 import { User } from "../models/user.modedl.js"; // Fix the typo in the import path
 import { errorHandler } from "../utils/error.js";
 import { sendToken } from "../utils/features.js";
+import { Chat } from "../models/chat.model.js";
 
 export const test = (req, res, next) => {
     res.send("hello world");
@@ -92,5 +93,31 @@ export const logout =  (req, res, next) => {
 }
 
 export const searchUser = async (req, res, next) => {
-    
+
+    const {name } = req.query;
+    const myChats = await Chat.find({
+        groupChat:false,
+        members:req.user
+    })
+
+  const allUsersFromMyChats = myChats.flatMap((chat)=>chat.members);
+
+  const allUsersExceptMeAndFriends = await User.find({
+    _id:{$nin:allUsersFromMyChats},
+    name:{$regex:name , $options:"i"},
+    })
+  
+ const users = allUsersExceptMeAndFriends.map(({_id,name,avatar})=> {
+    return {
+        _id,
+        name,
+        avatar:avatar.url
+    }
+ })
+
+
+    res.status(200).json({
+        success:true,
+        users
+    })
 }
