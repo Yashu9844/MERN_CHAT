@@ -245,15 +245,15 @@ export const getMyFriends = async (req,res,next)=>{
                 avatar:otherUser.avatar.url
             }
         })
-
+        let availableFriends = friends;
         if(chatId){
             const chat = await Chat.findById(chatId);
-            const availableFriends = friends.filter((friend)=>!chat.members.includes(friend._id))
+            availableFriends = friends.filter(friend => !chat.members.includes(friend._id));
         }
 
         return res.status(200).json({
             success:true,
-            friends:availableFriends
+            availableFriends
         })
 
         
