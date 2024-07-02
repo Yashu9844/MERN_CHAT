@@ -1,5 +1,6 @@
 
 import { Chat } from "../models/chat.model.js";
+import { Message } from "../models/message.model.js";
 import { User } from "../models/user.modedl.js"
 
 export const allUsers = async (req,res,next)=>{
@@ -46,7 +47,8 @@ export const allChats = async (req, res, next) => {
 
         const transformedChats = await Promise.all(
             chats.map(async ({ _id, groupChat, name, members, creator }) => {
-                const totalMessages = await Chat.countDocuments({ chat: _id });
+                const totalMessages = await Message.countDocuments({ chat: _id });
+                
 
                 return {
                     _id,
@@ -67,7 +69,7 @@ export const allChats = async (req, res, next) => {
                 };
             })
         );
-
+  
         const totalChats = await Chat.countDocuments();
 
         return res.status(200).json({
@@ -80,3 +82,32 @@ export const allChats = async (req, res, next) => {
         next(error);
     }
 };
+
+export const allMessages = async (req, res,next) => {
+    try {
+  const messages = await Message.find({}).populate("sender","name avatar").populate("chat","groupChat");
+
+ const transformedMessages = messages.map(({_id,attachments,sender,content,chat,createdAt})=>({
+    _id,
+    createdAt,
+    content,
+    attachments,
+    sender : {
+        _id:sender._id,
+        name:sender.name,
+        avatar:sender.avatar.url
+    },
+    groupChat:chat._id
+    
+ }))
+
+  res.status(200).json({
+    success:true,
+    transformedMessages
+  })
+
+        
+    } catch (error) {
+        next(error)
+    }
+}
