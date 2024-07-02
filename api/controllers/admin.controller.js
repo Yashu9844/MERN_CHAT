@@ -97,7 +97,7 @@ export const allMessages = async (req, res,next) => {
         name:sender.name,
         avatar:sender.avatar.url
     },
-    groupChat:chat._id
+    groupChat:chat.groupChat
     
  }))
 
@@ -110,4 +110,50 @@ export const allMessages = async (req, res,next) => {
     } catch (error) {
         next(error)
     }
+}
+
+export const getDashBoardStats = async (req,res,next)=>{
+    try {
+        const [totalGroupChats,totalUsers,totalChats,totalMessages]  = await Promise.all([
+            Chat.countDocuments({groupChat:true}),
+            User.countDocuments(),
+            Chat.countDocuments(),
+            Message.countDocuments()
+        ])
+       
+   const today = new Date();
+  const last7Days = new Date();
+  last7Days.setDate(last7Days.getDate() - 7);
+const messages = new Array(7).fill(0)
+ const last7DaysMessage = await Message.find({
+    createdAt: {$gte:last7Days}
+ }).select("createdAt")
+
+
+const daysInMillioSeconds = 1000*60*60*24;
+
+
+last7DaysMessage.forEach((message)=>{
+    const index = Math.floor((today.getTime() - message.createdAt.getTime())/daysInMillioSeconds)
+
+    messages[6-index]++;
+})
+const stats = {
+    totalGroupChats,
+    totalUsers,
+    totalChats,
+    totalMessages,
+    messagesChart:messages
+}
+
+
+
+        return res.status(200).json({
+            success:true,
+            stats
+        })
+        
+}catch(error){
+
+}
 }
