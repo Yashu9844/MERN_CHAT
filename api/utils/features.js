@@ -30,11 +30,15 @@ export const errorShow = (err, req, res, next) => {
       statusCode = 400;
       message = `Duplicate field: ${errorField}`;
   }
+  if(err.name === 'CastError'){
+   err.message= `Invalid Fromat of ${err.path}`;
+    statusCode = 400;
+  }
 
   res.status(statusCode).json({
       success: false,
       statusCode: statusCode,
-      message: message,
+      message: process.env.NODE_ENV === 'DEVELOPMENT' ? err :err.message,
   });
 };
 

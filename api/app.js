@@ -27,7 +27,7 @@ app.use('/chat',userChat)
 app.use('/admin',adminRoute)
 
 app.listen(port,()=>{
-    console.log(`server is running on port ${port}`)
+    console.log(`server is running on port ${port} in ${process.env.NODE_ENV}`);
 })
 
 app.use(errorShow)

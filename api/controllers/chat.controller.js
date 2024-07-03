@@ -236,8 +236,12 @@ export const sendAttachment = async (req,res,next)=>{
   try {
 
    const { chatId} = req.body
+   const files = req.files || []
 
-
+   if(files.length <1){
+    return next(errorHandler(400,"Please attach a file"));
+   }
+   if(files.length >5) return next(errorHandler(400,"Maximum number of files are exceeded"))
    const [chats,me] = await Promise.all([
     Chat.findById(chatId),
     User.findById(req.user,"name"),
@@ -247,7 +251,7 @@ export const sendAttachment = async (req,res,next)=>{
    }
 
 
-   const files = req.files || []
+  
 
    const attachments =[]  //upload files
 

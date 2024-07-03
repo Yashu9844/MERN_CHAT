@@ -54,7 +54,7 @@ export const leaveGroupValidator = ()=>[
 ]
 export const sendAttachmentValidator = ()=>[
     body("chatId","Please enter a chatId").notEmpty(),
-    check("files").notEmpty().withMessage('Please upload Attachments').isArray({min:1,max:5}).withMessage('Members must be between 1 and 5 ')
+   
 ]
 
 export const getMessagesValidator = ()=>[
