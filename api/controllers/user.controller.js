@@ -42,7 +42,7 @@ export const newUser = async (req, res, next) => {
 
     } catch (error) {
        
-        next(errorHandler(500,'User cant signup'))
+        next(error)
     }
 }
 

@@ -17,17 +17,27 @@ export const sendToken = (res, user, code, message) => {
   });
 };
 
-export const errorShow = (err, req, res,next)=>{
+export const errorShow = (err, req, res, next) => {
+  console.log(err.message);
 
-    const statusCode = err.statusCode || 500;
-    const message = err.message;
-    res.status(statusCode).json({
-       success: false,
-       statusCode: statusCode,
-       message: message,
-    })
-   
-   }
+  // Set default values
+  let statusCode = err.statusCode || 500;
+  let message = err.message || 'Internal Server Error';
+
+  // Handle specific MongoDB duplicate key error
+  if (err.code === 11000) {
+      const errorField = Object.keys(err.keyPattern).join(",");
+      statusCode = 400;
+      message = `Duplicate field: ${errorField}`;
+  }
+
+  res.status(statusCode).json({
+      success: false,
+      statusCode: statusCode,
+      message: message,
+  });
+};
+
 
    export const emitEvent = (req,event,users,data)=>{
          console.log("emiiting events",event)

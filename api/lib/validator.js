@@ -10,8 +10,7 @@ const registerValidator = ()=>[
       body("username","Please enter a username").notEmpty(),
       body("bio","Please enter a bio").notEmpty(),
       body("password","Please enter a password").notEmpty(),
-     check("avatar").notEmpty().withMessage('Please upload Avatar')
-
+     
     ]
 
 export const validateHandler = (req,res,next) =>{
