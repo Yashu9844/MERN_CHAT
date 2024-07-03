@@ -2,6 +2,8 @@
 import { Chat } from "../models/chat.model.js";
 import { Message } from "../models/message.model.js";
 import { User } from "../models/user.modedl.js"
+import { errorHandler } from "../utils/error.js";
+import jwt from 'jsonwebtoken'
 
 export const allUsers = async (req,res,next)=>{
     try {
@@ -156,4 +158,29 @@ const stats = {
 }catch(error){
 
 }
+}
+export const adminLogin = async (req,res,next)=>{
+    try {
+        const {secretKey} = req.body;
+
+        const adminLoginSecretKEy = process.env.ADMIN_SECREAT || " ";
+
+        const isMatched = adminLoginSecretKEy === secretKey;
+
+        if(!isMatched) return next(errorHandler(401,"Admin Login Unauthorized"));
+
+        const token = jwt.sign(adminLoginSecretKEy,process.env.JWT_SECREAT);
+
+        res.status(200).cookie('access_token',token,{
+            httpOnly: true,
+            maxAge: 15 * 24 * 60 * 60 * 1000,
+            secure: true
+        }).json({
+            success: true,
+            message: "Admin Login Successful"
+        })
+ 1       
+    } catch (error) {
+        next(error)
+    }
 }

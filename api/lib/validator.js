@@ -83,6 +83,11 @@ export const acceptRequestValidator = ()=>[
     body("accept","Please add accept").notEmpty().withMessage("Accept is Boolean").isBoolean().withMessage("Accept is Boolean"),
     
 ]
+export const adminLoginValidator = ()=>[
+    body("secretKey","Please enter a secreatKey").notEmpty(),
+    
+    
+]
 
 
 
