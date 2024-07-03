@@ -184,3 +184,20 @@ export const adminLogin = async (req,res,next)=>{
         next(error)
     }
 }
+
+export const adminLogout = async(req,res,next)=>{
+    try {
+
+        return res.status(200).cookie("access_token","",{
+            httpOnly:true,
+            maxAge:0,
+            secure:true
+        }).json({
+            success:true,
+            message: "Admin Logout Successful"
+        })
+        
+    } catch (error) {
+        next(error)
+    }
+}
