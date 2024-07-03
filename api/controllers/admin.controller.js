@@ -201,3 +201,15 @@ export const adminLogout = async(req,res,next)=>{
         next(error)
     }
 }
+
+export const getAllAdmin = async(req,res,next)=>{
+    try {
+
+        res.status(200).json({
+            admin:true,
+        })
+        
+    } catch (error) {
+        next(error)
+    }
+}

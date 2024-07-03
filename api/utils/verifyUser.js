@@ -16,12 +16,45 @@ try {
         if(err){
             return next(errorHandler(401,"Invalid Token"))
         }
+
+        
         req.user = user;
         next();
     })
  
 
 } catch (error) {
+    next(error);
+}
+
+
+}
+
+export const adminOnly =  (req,res,next) => {
+
+const token = req.cookies.access_token
+
+if(!token) {
+
+    return next(errorHandler(401,"Token Not Found"));
+
+}
+
+try {
+  const secretKey=   jwt.verify(token,process.env.JWT_SECREAT)
+       
+        const adminLoginSecretKEy = process.env.ADMIN_SECREAT || " ";
+
+        const isMatched = adminLoginSecretKEy === secretKey;
+
+        if(!isMatched) return next(errorHandler(401,"Admin Login Unauthorized"));
+
+ 
+        next();
+    }
+ 
+
+catch (error) {
     next(error);
 }
 
