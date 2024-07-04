@@ -38,7 +38,10 @@ app.use(cookieParser());
 app.use("/user", userRoute);
 app.use("/chat", userChat);
 app.use("/admin", adminRoute);
+io.use((socket,next)=>{
+    
 
+})
 // Middleware to handle errors
 app.use(errorShow);
 
