@@ -8,8 +8,10 @@ import userChat from "./routes/chat.route.js";
 import adminRoute from "./routes/admin.router.js";
 import { Server } from "socket.io";
 import { createServer } from "http";
-import { NEW_MESSAGE } from "./constants/events.js";
+import { NEW_MESSAGE, NEW_MESSAGE_ALERT } from "./constants/events.js";
 import { v4 as uuid } from "uuid";
+import { getSockets } from "./lib/helper.js";
+import { Message } from "./models/message.model.js";
 dotenv.config();
 
 const app = express();
@@ -29,7 +31,7 @@ mongoose
     console.error("MongoDB connection error:", err);
   });
 
-const userSocketIDs = new Map();
+export const userSocketIDs = new Map();
 
 app.use(express.json());
 app.use(cookieParser());
@@ -55,7 +57,7 @@ io.on("connection", (socket) => {
     _id: "yashuIDs",
     name: "yashu",
   };
-  userSocketIDs.set(userr._id, socket.id);
+  userSocketIDs.set(userr._id.toString(), socket.id);
   console.log(userSocketIDs);
 
   socket.on(NEW_MESSAGE, async ({ chatId, members, messages }) => {
@@ -75,11 +77,24 @@ io.on("connection", (socket) => {
       sender: userr._id,
       chat: chatId,
     };
-
-    console.log("New Message", messageForRealTime);
+   const memberSocket = getSockets(members)
+   io.to(memberSocket).emit(NEW_MESSAGE,{
+    chatId,
+    message:messageForRealTime
+    
+   })
+   io.to(memberSocket).emit(NEW_MESSAGE_ALERT,{
+    chatId,})
+   try {
+    await Message.create(messagesForDb)
+   } catch (error) {
+    console.log(error);
+    
+   }
   });
 
   socket.on("disconnect", () => {
     console.log("User disconnected:", socket.id);
+    userSocketIDs.delete(userr._id.toString());
   });
 });
