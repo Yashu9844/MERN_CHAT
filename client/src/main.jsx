@@ -4,14 +4,17 @@ import App from './App.jsx'
 import './index.css'
 import {CssBaseline} from '@mui/material';
 import {HelmetProvider} from 'react-helmet-async'
-
+import {Provider} from 'react-redux'
+import { store } from './redux/store.js';
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-   <HelmetProvider>
+<Provider store={store}>
+<HelmetProvider>
    <CssBaseline/>
     <div onClick={ (e)=> e.preventDefault()}>
       <App />
     </div>
    </HelmetProvider>
+</Provider>
   </React.StrictMode>,
 )

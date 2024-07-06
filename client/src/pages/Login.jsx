@@ -5,9 +5,14 @@ import { VisuallyHiddenInput } from '../components/styles/StyledComponent'
 import {useFileHandler, useInputValidation,useStrongPassword} from '6pp'
 import { usernameValidator } from '../utils/validators.js'
 import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
+import { server } from '../components/constatns/config.js'
+import { useDispatch } from 'react-redux'
+import { userExits } from '../redux/reducers/auth.js'
 
 const Login = () => {
   const [isLoggedIn,setIsLoggedIn] = useState(true)
+  const dispatch = useDispatch()
 
   const handleLogin = () => {
     setIsLoggedIn((prev) => !prev)
@@ -22,6 +27,21 @@ const Login = () => {
   const  handleLoginSubmit= async (e)=>{
     e.preventDefault()
 
+   try {
+const {data} =   await   axios.post(`${server}/api/user/login`,{
+       username:username.value,
+       password:password.value
+     },{
+       withCredentials:true,
+       headers:{
+         'Content-Type': 'application/json'
+       }
+     })
+     dispatch(userExits(true))
+   } catch (error) {
+    console.error(error)
+   }
+ 
   }
 
   const handleSignUp = async(e)=>{

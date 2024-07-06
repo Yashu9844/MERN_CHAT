@@ -1,8 +1,12 @@
-import React, { Suspense, lazy } from 'react';
+import React, { Suspense, lazy, useEffect } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import ProtectRoute from './components/styles/auth/ProtectRoute';
 import LayoutlLoader from './components/layout/LayoutlLoader';
-
+import { server } from './components/constatns/config.js';
+import axios from 'axios'
+import { useDispatch, useSelector } from 'react-redux';
+import { userNotExits } from './redux/reducers/auth.js';
+import {Toaster} from 'react-hot-toast'
 
 const Landing = lazy(() => import("./pages/Landing"));
 
@@ -32,7 +36,19 @@ let user =true;
 
 
 const App = () => {
-  return (
+  const {user,loader} = useSelector(state => state.auth)
+  
+  const dispatch = useDispatch();
+
+
+  useEffect(()=>{
+    console.log(server);
+   axios.get(`${server}/api/user/me`)
+   .then((res)=>console.log(res))
+   .catch((err)=>dispatch(userNotExits()))
+    
+  },[])
+  return loader? (LayoutlLoader) : (
     <BrowserRouter>
      <Suspense fallback={<LayoutlLoader/>}>
      <Routes>
