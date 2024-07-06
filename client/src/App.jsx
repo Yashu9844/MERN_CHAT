@@ -73,6 +73,7 @@ const App = () => {
 
       </Routes>
      </Suspense>
+     <Toaster position="bottom-center" />
     </BrowserRouter>
   );
 };

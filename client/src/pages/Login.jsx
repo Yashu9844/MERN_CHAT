@@ -9,6 +9,7 @@ import axios from 'axios'
 import { server } from '../components/constatns/config.js'
 import { useDispatch } from 'react-redux'
 import { userExits } from '../redux/reducers/auth.js'
+import toast from 'react-hot-toast'
 
 const Login = () => {
   const [isLoggedIn,setIsLoggedIn] = useState(true)
@@ -37,9 +38,10 @@ const {data} =   await   axios.post(`${server}/api/user/login`,{
          'Content-Type': 'application/json'
        }
      })
-     dispatch(userExits(true))
+     dispatch(userExits(true));
+     toast.success(data.message)
    } catch (error) {
-    console.error(error)
+    toast.error(error?.response.data.message || 'Sommething went wrong')
    }
  
   }
