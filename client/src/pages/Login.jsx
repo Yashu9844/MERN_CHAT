@@ -29,7 +29,7 @@ const Login = () => {
     e.preventDefault()
 
    try {
-const {data} =   await   axios.post(`${server}/api/user/login`,{
+const {data} =   await axios.post(`${server}/api/user/log-in`,{
        username:username.value,
        password:password.value
      },{
@@ -41,13 +41,35 @@ const {data} =   await   axios.post(`${server}/api/user/login`,{
      dispatch(userExits(true));
      toast.success(data.message)
    } catch (error) {
-    toast.error(error?.response.data.message || 'Sommething went wrong')
+    toast.error(error?.response?.data?.message || 'Sommething went wrong')
    }
  
   }
 
   const handleSignUp = async(e)=>{
     e.preventDefault()
+   
+    const formData = new FormData();
+    formData.append('username', username.value);
+    formData.append('password', password.value);
+    formData.append('avatar', avatar.file);
+    formData.append('name', name.value);
+    formData.append('bio', bio.value);
+
+   try {
+    const {data} = await axios.post(`${server}/api/user/sign-up`,formData,{
+     withCredentials:true,
+     headers:{
+       'Content-Type':'multipart/form-data'
+     }
+    })
+ dispatch(userExits(true))
+ toast.success(data.message);
+ 
+   } catch (error) {
+    toast.error(error?.response?.data?.message || 'Sommething went wrong')
+    
+   }
 
   }
 
