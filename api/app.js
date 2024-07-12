@@ -13,11 +13,16 @@ import { v4 as uuid } from "uuid";
 import { getSockets } from "./lib/helper.js";
 import { Message } from "./models/message.model.js";
 import cors  from 'cors'
-dotenv.config();
+import {v2 as cloudinary } from 'cloudinary'
+dotenv.config({
+  cloud_name: process.env.CLOUDINARY_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 const app = express();
 const server = createServer(app); // Create HTTP server using Express app
-
+cloudinary.config()
 // Create Socket.IO instance and attach it to HTTP server
 const io = new Server(server, {}); // You can pass options to Server if needed
 
@@ -38,7 +43,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(cors(
   {
-    origin:['http://localhost:5173', 'https://localhost:4173',process.env.CLIENT_URL],
+    origin:['http://localhost:5173','http://localhost:5174', 'https://localhost:4173',process.env.CLIENT_URL],
     credentials:true,
   }
 ))

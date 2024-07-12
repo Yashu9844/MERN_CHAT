@@ -1,7 +1,7 @@
 import { compare } from "bcrypt";
 import { User } from "../models/user.modedl.js"; // Fix the typo in the import path
 import { errorHandler } from "../utils/error.js";
-import { emitEvent, sendToken } from "../utils/features.js";
+import { emitEvent, sendToken, uploadCloudainary } from "../utils/features.js";
 import { Chat } from "../models/chat.model.js";
 import { Request } from "../models/request.model.js";
 import { NEW_REQUEST, REFETCH_CHATS } from "../constants/events.js";
@@ -12,39 +12,50 @@ export const test = (req, res, next) => {
 }
 
 export const newUser = async (req, res, next) => {
-    const avatar = {
-        public_id: "Sdfiuhdh",
-        url: "asdasd"
-    }
-
     try {
-        const { name, username, password, bio } = req.body;
-
-        // Basic input validation (you might want to use a library like Joi or express-validator for more complex validation)
-        if (!name || !username || !password) {
-            return res.status(400).json({ message: "Name, username, and password are required" });
-        }
-
-        // Create a new user
-        const user = await User.create({
-            name,
-            username,
-            password,
-            avatar,
-            bio
-        });
-
-        const {password:pass , ...rest} = user._doc;
-
-        sendToken(res,rest,201,"User Created")
-
-        res.status(201).json({ message: "User created successfully", user });
-
+      const { name, username, password, bio } = req.body;
+      console.log('Received Data:', { name, username, password, bio });
+      console.log('Received File:', req.file);
+  
+      // Basic input validation
+      if (!name || !username || !password) {
+        return res.status(400).json({ message: "Name, username, and password are required" });
+      }
+  
+    //   const file = req.file;
+    //   if (!file) {
+    //     return next(errorHandler(401, "Please upload a file"));
+    //   }
+  
+    //   const result = await uploadCloudainary([file]);
+    //   console.log('Cloudinary Result:', result);
+  
+    //   const avatar = {
+    //     public_id: result[0].public_id,
+    //     url: result[0].url
+    //   };
+  
+      // Create a new user
+      const user = await User.create({
+        name,
+        username,
+        password,
+        // avatar,
+        bio
+      });
+  
+      const { password: pass, ...rest } = user._doc;
+  
+      sendToken(res, rest, 201, "User Created");
+  
+      res.status(201).json({ message: "User created successfully", user });
+  
     } catch (error) {
-       
-        next(error)
+      console.log('Error:', error);
+      next(error);
     }
-}
+  }
+  
 
 export const login = async (req, res, next) => {
 
@@ -75,12 +86,17 @@ export const login = async (req, res, next) => {
 }
 export const getMyProfile =async (req,res, next) => {
 
-  const hellouser = await User.findOne(req.user);
+  try {
+    const hellouser = await User.findOne({_id:req.user._id});
   console.log(hellouser)
-    res.status(200).json({
-        success:true,
-        user:req.user._id
-    })
+      res.status(200).json({
+          success:true,
+          user:hellouser
+      })
+  } catch (error) {
+    next(error)
+    
+  }
 }
 export const logout =  (req, res, next) => {
 

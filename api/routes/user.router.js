@@ -8,7 +8,7 @@ import { acceptRequestValidator, loginValidator, registerValidator, sendRequestV
 const router = express.Router();
 
 router.get('/', test);
-router.post('/sign-up',registerValidator(),validateHandler, multerUpload.single('avatar'), newUser);
+router.post('/sign-up',registerValidator(),validateHandler, newUser);
 router.get('/log-out',verifyToken,  logout); // Protect the logout route with verifyToken
 router.post('/log-in',loginValidator(),validateHandler, login); // Do not use verifyToken here
 router.get('/me',verifyToken,getMyProfile);

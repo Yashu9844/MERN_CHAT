@@ -1,5 +1,7 @@
 import jwt from "jsonwebtoken";
-
+import {v2 as cloudinary} from "cloudinary";
+import {v4 as uuid} from "uuid";
+import { getBase64 } from "../lib/helper.js";
 export const sendToken = (res, user, code, message) => {
   const token = jwt.sign({ _id: user._id }, process.env.JWT_SECREAT);
   const cookieOptions = {
@@ -50,3 +52,27 @@ export const errorShow = (err, req, res, next) => {
    export const deleteFileFromCloudainary = async (public_ids)=>{
     
    }
+export const uploadCloudainary = async (files=[])=>{
+  try {
+    const uploadPromises = files.map((file)=>{
+      return new Promise((resolve,reject)=>{
+        cloudinary.uploader.upload(getBase64(file),{
+          resource_type:"auto",
+          public_id:uuid()
+        },(err,result)=>{
+          if(err) return reject(err);
+          resolve(result);
+        })
+      })
+    })
+
+    const results = await Promise.all(uploadPromises);
+    const formattedResults = results.map((result)=>({
+      public_id: result.public_id,
+      url:result.secure_url,
+    }))
+    return formattedResults
+  } catch (error) {
+    throw new Error('Error uploading file: to cloaudinary' + error.message)
+  }
+}
